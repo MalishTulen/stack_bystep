@@ -2,17 +2,19 @@ typedef int Stack_Elem_Data_t;
 
 #include <stdio.h>
 #include <malloc.h>
+#include <assert.h>
+
 #include "stack.h"
 
 void StackCtor ( Stack * ptr_data, int new_capacity )
 {
     //assert
-    ptr_data->petushara1 = 0xD01B0EB1;
-    ptr_data->petushara2 = 0xD01B0EB2;
+    *(ptr_data->petushara1) = 0xD01B0EB1;
+    *(ptr_data->petushara2) = 0xD01B0EB2;
     size_t size = (2 * sizeof ( long long ) + (( new_capacity * sizeof ( int ) ) / 8 * 8 ) );
     ptr_data->stk_ptr = ( Stack_Elem_Data_t * ) calloc ( size, sizeof ( Stack_Elem_Data_t ) );
 
-    ptr_data->petushara3 = ptr_data->stk_ptr
+    //ptr_data->petushara3 = ptr_data->stk_ptr;
 
     *(ptr_data->petushara3) = 0xD01B0EB3;
     *(ptr_data->petushara4) = 0xD01B0EB4;
@@ -25,7 +27,7 @@ void StackCtor ( Stack * ptr_data, int new_capacity )
     }
     else
         ptr_data->is_blank = false;
-    ptr_data->stk_ptr[0] = 10;
+    //*(ptr_data->stk_ptr(5)) = 10;
 }
 
 void StackPush ( Stack * ptr_data, Stack_Elem_Data_t value )
@@ -51,3 +53,28 @@ void StackBurger ( Stack * ptr_data )
     printf ( "]" );
 }
 
+int StackBalls ( Stack * ptr_data )
+{
+    if ( ptr_data->size < 0 )
+        return 1;
+
+    if ( ptr_data->capacity < 0 )
+        return 2;
+
+    if ( !(ptr_data->stk_ptr) )
+        return 3;
+
+    if ( ptr_data->size > ptr_data->capacity )
+        return 4;
+
+    if ( !(ptr_data->petushara1) )
+        return 51;
+    if ( !(ptr_data->petushara2) )
+        return 52;
+    if ( !(ptr_data->petushara3) )
+        return 53;
+    if ( !(ptr_data->petushara4) )
+        return 54;
+
+    return 0;
+}
