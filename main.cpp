@@ -36,8 +36,7 @@ int main()
     */
     StackPush ( ptr_stk, 5 );
 
-    if ((StackBalls ( ptr_stk )) != 0 )
-        fprintf ( stderr, "%d", StackBalls ( ptr_stk ) );
+    StackBalls ( ptr_stk );
 
     StackBurger ( ptr_stk );
     printf ( "\nReturn value: %d\n\n", StackPop ( ptr_stk ));
@@ -48,8 +47,8 @@ int main()
 
 //fprintf ( stderr, "ptr3\n");
 
-    if ((StackBalls ( ptr_stk )) != 0 )
-        fprintf ( stderr, "%d", StackBalls ( ptr_stk ));
+    StackBalls ( ptr_stk );
+
 
     StackBurger ( ptr_stk );
 

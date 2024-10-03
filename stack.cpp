@@ -7,20 +7,18 @@
 void StackCtor ( Stack * ptr_stk, int capacity )
 {
     //assert
-    //*(ptr_data->petushara1) = 0xD01B0EB1;
-    //*(ptr_data->petushara2) = 0xD01B0EB2;
-    //size_t size = (/*2 * sizeof ( canary_t ) +*/ (( new_capacity * sizeof ( Stack_Elem_Data_t ) ) ) );
-    ptr_stk->data_ptr = ( Stack_Elem_Data_t * ) calloc ( capacity, sizeof ( Stack_Elem_Data_t ) );
-    //ptr_data->petushara3 = ptr_data->stk_ptr;
-
-    //*(ptr_data->petushara3) = 0xD01B0EB3;
-
-    //*(ptr_data->petushara4) = 0xD01B0EB4;
-
     ptr_stk->size = 0;
     ptr_stk->capacity = capacity;
 
-    //*(ptr_data->stk_ptr(5)) = 10;
+    size_t size = ( 2 * sizeof ( canary_t ) + capacity );
+    Stack_Elem_Data_t * tmp_ptr = ( Stack_Elem_Data_t * ) calloc ( size, sizeof ( Stack_Elem_Data_t ) );
+
+    ptr_stk->data_ptr = tmp_ptr + sizeof ( canary_t );
+
+    *(ptr_stk->data_ptr - sizeof ( canary_t )) = 0xD01B0EEB;
+
+    *(ptr_stk->data_ptr + capacity ) = 0xD01B0EEB;
+    StackBalls ( ptr_stk );
 }
 
 
@@ -38,19 +36,22 @@ void StackBurger ( Stack * ptr_stk )
 }
 int StackBalls ( Stack * ptr_stk )
 {
-    if ( ptr_stk->size < 0 )
-        return ERROR_SIZE;
+    if ( ptr_stk->size < 10 )
+    {
+        StackBurger ( ptr_stk );
+        return ( ERROR_SIZE );
+    }
 
     if ( ptr_stk->capacity < 0 )
-        return ERROR_CAPACITY;
-
+        StackBurger ( ptr_stk );
+        return ( ERROR_CAPACITY );
     if ( ( ptr_stk->data_ptr ) == NULL )
-        return ERROR_DATA_PTR;
-
+        StackBurger ( ptr_stk );
+        return ( ERROR_DATA_PTR );
     if ( ptr_stk->size > ptr_stk->capacity )
-        return ERROR_S_LARGER_C;
-
-    /*if ( (ptr_data->petushara1) == NULL )
+        StackBurger ( ptr_stk );
+        return ( ERROR_S_LARGER_C );
+    if ( (ptr_stk->data_ptr ) == NULL )
         return 51;
     if ( (ptr_data->petushara2) == NULL )
         return 52;
@@ -58,8 +59,7 @@ int StackBalls ( Stack * ptr_stk )
         return 53;
     if ( (ptr_data->petushara4) == NULL )
         return 54;*/
-
-    return 0;
+    return GOOD_ENDING;
 }
 
 int StackPop ( Stack * ptr_stk )
