@@ -11,10 +11,8 @@ int main()
     Stack gooooal = {};
     Stack * ptr_stk = &gooooal;
 fprintf ( stderr, "***1\n");
-
-
-printf("%d", sizeof(int));
     StackCtor ( ptr_stk, 3 );
+printf("\nEqualazer = %d\n", ptr_stk->equalazer);
 fprintf ( stderr, "***2\n");
 
     ASSERT ( ptr_stk );

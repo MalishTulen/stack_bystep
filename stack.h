@@ -3,7 +3,7 @@
 
 #define ASSERT( ptr_stk  )      {                                                                                        \
 int c;                                                                                                                   \
-if ( ( c = StackBalls ( ptr_stk )) != GOOD_ENDING )                                                                      \
+if ( ( c = StackBalls ( ptr_stk )) != STACKBALLS_DONE )                                                                      \
     fprintf ( stderr, "\n####\n#%d error in file %s in func (%s), line %d\n###\n", c, __FILE__, __func__, __LINE__);     \
     fprintf ( stderr, "\nPress Enter to continue" );                                                                     \
     getchar();  }                                                                                                        \
@@ -16,13 +16,23 @@ enum ERROR_CODES
     ERROR_DATA_PTR = 2,
     ERROR_S_LARGER_C = 3,
     ERROR_ZERO_SIZE = 666,
-    GOOD_ENDING = 7
 };
 
 enum PETUSHKI
 {
     PETUSHOK1 = 0xD01BAEB1,
     PETUSHOK2 = 0xD01BAEB2
+};
+
+enum PODZALUPNIY_TVOROG
+{
+    STACKCTOR_DONE = 0,
+    STACKBURGER_DONE = 0,
+    STACKBALLS_DONE = 0,
+    STACKPUSH_DONE = 0,
+    RECALLOC_DONE = 0,
+    CLEANERREALLOC_DONE = 0,
+    STACKDTOR_DONE = 0,
 };
 
 //TODO long long as puteshara_t
@@ -37,20 +47,20 @@ struct Stack
     int equalazer;
 };
 
-void StackCtor ( Stack * ptr_data, int new_capacity );
+int StackCtor ( Stack * ptr_data, int new_capacity );
 
-void StackPush ( Stack * ptr_data, Stack_Elem_Data_t value );
+int StackPush ( Stack * ptr_data, Stack_Elem_Data_t value );
 
-void StackBurger ( Stack * ptr_data );
+int StackBurger ( Stack * ptr_data );
 
 int StackBalls ( Stack * ptr_stk );
 
 int StackPop ( Stack * ptr_data );
 
-void recalloc ( Stack* ptr_stk, int new_capacity );
+int recalloc ( Stack* ptr_stk, int new_capacity );
 
-void cleaner_realloc ( Stack* ptr_stk );
+int cleaner_realloc ( Stack* ptr_stk );
 
-void StackDtor ( Stack* ptr_stk );
+int StackDtor ( Stack* ptr_stk );
 
 #endif
