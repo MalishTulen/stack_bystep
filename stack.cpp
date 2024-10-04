@@ -9,15 +9,19 @@ void StackCtor ( Stack * ptr_stk, int capacity )
     //assert
     ptr_stk->size = 0;
     ptr_stk->capacity = capacity;
+    if ( capacity % 4 == 0)
+        ptr_stk->equalazer = 0;
+    else
+        ptr_stk->equalazer = sizeof ( int ) - capacity % 4;
 
-    size_t size = ( 2 * sizeof ( canary_t ) + capacity );
+    size_t size = ( 2 * sizeof ( canary_t ) + capacity + ptr_stk->equalazer );
     Stack_Elem_Data_t * tmp_ptr = ( Stack_Elem_Data_t * ) calloc ( size, sizeof ( Stack_Elem_Data_t ) );
 
     ptr_stk->data_ptr = tmp_ptr + sizeof ( canary_t );
 
-    *(ptr_stk->data_ptr - sizeof ( canary_t )) = 0xD01B0EEB;
+    *( tmp_ptr ) = 12345678;
 
-    *(ptr_stk->data_ptr + capacity ) = 0xD01B0EEB;
+    *(ptr_stk->data_ptr + capacity + ptr_stk->equalazer ) = 12345678;
     StackBalls ( ptr_stk );
 }
 
@@ -28,15 +32,16 @@ void StackBurger ( Stack * ptr_stk )
     printf ( "capacity=%d\n", ptr_stk->capacity );
 
     printf ( "Stack:[ " );
-    for ( int i = 0; i < ptr_stk->capacity; i++ )
+    for ( int i = 0 ; i < ( ptr_stk->capacity + 2 * sizeof ( canary_t ) ); i++ )
     {
-        printf ( "(%d) ", ptr_stk->data_ptr[ i ] );
+        printf ( "(%d) ", *(ptr_stk->data_ptr + i - sizeof ( canary_t ) )  );
     }
     printf ( "]\n" );
 }
+
 int StackBalls ( Stack * ptr_stk )
 {
-    if ( ptr_stk->size < 10 )
+    if ( ptr_stk->size < 0 )
     {
         StackBurger ( ptr_stk );
         return ( ERROR_SIZE );
@@ -51,7 +56,7 @@ int StackBalls ( Stack * ptr_stk )
     if ( ptr_stk->size > ptr_stk->capacity )
         StackBurger ( ptr_stk );
         return ( ERROR_S_LARGER_C );
-    if ( (ptr_stk->data_ptr ) == NULL )
+    /*if ( (ptr_stk->data_ptr ) == NULL )
         return 51;
     if ( (ptr_data->petushara2) == NULL )
         return 52;
@@ -66,7 +71,7 @@ int StackPop ( Stack * ptr_stk )
 {
     if ( ptr_stk->size == 0 )
     {
-        printf ( "\nStack have zero elements! Try to add elements before using StackPop!");
+        printf ( "\nStack have zero elements! Try to add elements before using StackPopa!");
         return ERROR_ZERO_SIZE;
     }
     else
@@ -97,9 +102,17 @@ void StackPush ( Stack * ptr_stk, Stack_Elem_Data_t value )
 
 void recalloc ( Stack* ptr_stk, int new_capacity )
 {
-    ptr_stk->data_ptr = ( Stack_Elem_Data_t* ) realloc ( ptr_stk->data_ptr, new_capacity );
+    if ( new_capacity % 4 == 0)
+        ptr_stk->equalazer = 0;
+    else
+        ptr_stk->equalazer = sizeof ( int ) - new_capacity % 4;
+
+    ptr_stk->data_ptr = ( Stack_Elem_Data_t* ) realloc ( ptr_stk->data_ptr, new_capacity + 2 * sizeof ( canary_t ) + ptr_stk->equalazer );
     if (ptr_stk->capacity < new_capacity )
         cleaner_realloc ( ptr_stk );
+
+    *( ptr_stk->data_ptr - sizeof ( canary_t )) = PETUSHOK1;
+    *( ptr_stk->data_ptr + new_capacity + ptr_stk->equalazer ) = PETUSHOK2;
 }
 
 void cleaner_realloc ( Stack* ptr_stk )

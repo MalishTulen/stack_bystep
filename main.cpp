@@ -14,29 +14,29 @@ int main()
 
 
     //printf("%d", sizeof(int));
-    StackCtor ( ptr_stk, 1 );
+    StackCtor ( ptr_stk, 3 );
 //fprintf ( stderr, "ptr2\n");
 
-/*if ((StackBalls ( ptr_stk )) != 0 )
-    fprintf ( stderr, "%d\n", StackBalls ( ptr_stk ));
+    ASSERT ( ptr_stk );
 
+//fprintf ( stderr, "ptr11\n" );
     StackBurger ( ptr_stk );
     StackPush ( ptr_stk, 10 );
-
+//fprintf ( stderr, "ptr12\n" );
     StackBurger ( ptr_stk );
     StackPush ( ptr_stk, 20 );
-
+//fprintf ( stderr, "ptr13\n" );
     StackBurger ( ptr_stk );
     StackPush ( ptr_stk, 30 );
-
+//fprintf ( stderr, "ptr14\n" );
     StackBurger ( ptr_stk );
     StackPush ( ptr_stk, 1000 );
 
     StackBurger ( ptr_stk );
-    */
+
     StackPush ( ptr_stk, 5 );
 
-    StackBalls ( ptr_stk );
+    ASSERT ( ptr_stk );
 
     StackBurger ( ptr_stk );
     printf ( "\nReturn value: %d\n\n", StackPop ( ptr_stk ));
@@ -47,11 +47,12 @@ int main()
 
 //fprintf ( stderr, "ptr3\n");
 
-    StackBalls ( ptr_stk );
-
+    ASSERT ( ptr_stk );
 
     StackBurger ( ptr_stk );
 
 //fprintf ( stderr, "ptr3\n");
     StackDtor ( ptr_stk );
+
+    StackBurger ( ptr_stk );
 }
