@@ -51,6 +51,4 @@ fprintf ( stderr, "***8\n");
 
 fprintf ( stderr, "***9\n");
     StackDtor ( ptr_stk );
-
-    StackBurger ( ptr_stk );
 }
