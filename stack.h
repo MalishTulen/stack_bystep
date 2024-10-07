@@ -1,13 +1,55 @@
 #ifndef STACK_HEADER
 #define STACK_HEADER
 
-#define ASSERT( ptr_stk  )      {                                                                                        \
-int c;                                                                                                                   \
-if ( ( c = StackBalls ( ptr_stk )) != STACKBALLS_DONE )  {                                                               \
-    fprintf ( stderr, "\n####\n#%d error in file %s in func (%s), line %d\n###\n", c, __FILE__, __func__, __LINE__);     \
-    fprintf ( stderr, "\nPress Enter to continue" );                                                                     \
-    getchar(); }}                                                                                                        \
-
+#define STACK_ASSERT( ptr_stk  )      ({                                                                            \
+                                                                                                                    \
+int c;                                                                                                              \
+if ( ( c = StackBalls ( ptr_stk )) != FUNC_DONE )                                                                   \
+    switch ( c )                                                                                                    \
+    {                                                                                                               \
+        case 1:                                                                                                     \
+        {                                                                                                           \
+            fprintf ( stderr, "\nERROR ( CAPACITY < 0 )  in file %s in func (%s), "                                 \
+                              "line %d\n\nPress Enter to continue", __FILE__, __func__, __LINE__);                  \
+            getchar();                                                                                              \
+            break;                                                                                                  \
+        }                                                                                                           \
+        case 2:                                                                                                     \
+        {                                                                                                           \
+            fprintf ( stderr, "\nERROR ( BAD DATA PTR )  in file %s in func (%s), "                                 \
+                              "line %d\n\nPress Enter to continue", __FILE__, __func__, __LINE__);                  \
+            getchar();                                                                                              \
+            break;                                                                                                  \
+        }                                                                                                           \
+        case 3:                                                                                                     \
+        {                                                                                                           \
+            fprintf ( stderr, "\nERROR ( SIZE > CAPACITY )  in file %s in func (%s), "                              \
+                              "line %d\n\nPress Enter to continue", __FILE__, __func__, __LINE__);                  \
+            getchar();                                                                                              \
+            break;                                                                                                  \
+        }                                                                                                           \
+        case 666:                                                                                                   \
+        {                                                                                                           \
+            fprintf ( stderr, "\nERROR ( YOU CANT POP EMPTY STACK )  in file %s in func (%s), "                     \
+                              "line %d\n\nPress Enter to continue", __FILE__, __func__, __LINE__);                  \
+            getchar();                                                                                              \
+            break;                                                                                                  \
+        }                                                                                                           \
+        case 0:                                                                                                     \
+        {                                                                                                           \
+            fprintf ( stderr, "\nERROR ( SIZE < 0 )  in file %s in func (%s), "                                     \
+                              "line %d\n\nPress Enter to continue", __FILE__, __func__, __LINE__);                  \
+            getchar();                                                                                              \
+            break;                                                                                                  \
+        }                                                                                                           \
+                                                                                                                    \
+        default:                                                                                                    \
+        {                                                                                                           \
+            fprintf ( stderr, "UNKNOWN ERROR" );                                                                    \
+            exit (52);                                                                                              \
+        }                                                                                                           \
+    }                                                                                                               \
+        });
 
 enum ERROR_CODES
 {
@@ -27,14 +69,8 @@ enum PETUSHKI
 };
 
 enum PODZALUPNIY_TVOROG
-{//TODO 1-FUNC_DONE, 2-FUNC_ERROR
-    STACKCTOR_DONE = 0,
-    STACKBURGER_DONE = 0,
-    STACKBALLS_DONE = 0,
-    STACKPUSH_DONE = 0,
-    RECALLOC_DONE = 0,
-    CLEANERREALLOC_DONE = 0,
-    STACKDTOR_DONE = 0,
+{
+    FUNC_DONE = 0
 };
 
 typedef int Stack_Elem_Data_t;
@@ -46,7 +82,10 @@ struct Stack
     int size;
     int capacity;
     int equalazer;
+    unsigned long hehesh;
 };
+
+unsigned long hash ( Stack * ptr_stk );
 
 int StackCtor ( Stack * ptr_data, int new_capacity );
 
@@ -63,5 +102,7 @@ int recalloc ( Stack* ptr_stk, int new_capacity );
 int cleaner_realloc ( Stack* ptr_stk );
 
 int StackDtor ( Stack* ptr_stk );
+
+int give_equalazer ( Stack * ptr_stk, int capacity );
 
 #endif
