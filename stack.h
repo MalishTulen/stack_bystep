@@ -42,6 +42,13 @@ if ( ( c = StackCheck ( ptr_stk )) != FUNC_DONE )                               
             getchar();                                                                                              \
             break;                                                                                                  \
         }                                                                                                           \
+        case 1234:                                                                                                  \
+        {                                                                                                           \
+            fprintf ( stderr, "\nERROR ( BAD HASH DETECTED )  in file %s in func (%s), "                            \
+                              "line %d\n\nPress Enter to continue", __FILE__, __func__, __LINE__);                  \
+            getchar();                                                                                              \
+            break;                                                                                                  \
+        }                                                                                                           \
                                                                                                                     \
         default:                                                                                                    \
         {                                                                                                           \
@@ -58,6 +65,7 @@ enum ERROR_CODES
     ERROR_DATA_PTR = 2,
     ERROR_S_LARGER_C = 3,
     ERROR_ZERO_SIZE = 666,
+    BAD_HASH = 1234,
 };
 
 enum PETUSHKI
@@ -85,24 +93,17 @@ struct Stack
     unsigned long hehesh;
 };
 
-unsigned long give_hash ( const Stack_Elem_Data_t * element );
-
-int StackCtor ( Stack * ptr_data, int new_capacity );
-
-int StackPush ( Stack * ptr_data, Stack_Elem_Data_t value );
-
-int StackDump ( Stack * ptr_data );
-
-int StackCheck ( Stack * ptr_stk );
-
-int StackPop ( Stack * ptr_data );
-
-int recalloc ( Stack* ptr_stk, int new_capacity );
-
-int cleaner_realloc ( Stack* ptr_stk );
-
-int StackDtor ( Stack* ptr_stk );
-
-int give_equalazer ( Stack * ptr_stk, int capacity );
+unsigned long one_hash          ( const Stack_Elem_Data_t * element );
+int           give_me_that_hash ( Stack* ptr_stk );
+bool          hash_check        ( Stack* ptr_stk );
+int           StackPush         ( Stack * ptr_data, Stack_Elem_Data_t value );
+int           StackCtor         ( Stack * ptr_data, int new_capacity );
+int           StackDump         ( Stack * ptr_data );
+int           StackCheck        ( Stack * ptr_stk );
+int           StackPop          ( Stack * ptr_data );
+int           recalloc          ( Stack* ptr_stk, int new_capacity );
+int           cleaner_realloc   ( Stack* ptr_stk );
+int           StackDtor         ( Stack* ptr_stk );
+int           give_equalazer    ( Stack * ptr_stk, int capacity );
 
 #endif
