@@ -4,7 +4,7 @@
 #define STACK_ASSERT( ptr_stk  )      ({                                                                            \
                                                                                                                     \
 int c;                                                                                                              \
-if ( ( c = StackBalls ( ptr_stk )) != FUNC_DONE )                                                                   \
+if ( ( c = StackCheck ( ptr_stk )) != FUNC_DONE )                                                                   \
     switch ( c )                                                                                                    \
     {                                                                                                               \
         case 1:                                                                                                     \
@@ -68,7 +68,7 @@ enum PETUSHKI
     PETUSHOK2_ERROR = 667
 };
 
-enum PODZALUPNIY_TVOROG
+enum FUNC_CHECK
 {
     FUNC_DONE = 0
 };
@@ -85,15 +85,15 @@ struct Stack
     unsigned long hehesh;
 };
 
-unsigned long hash ( Stack * ptr_stk );
+unsigned long give_hash ( const Stack_Elem_Data_t * element );
 
 int StackCtor ( Stack * ptr_data, int new_capacity );
 
 int StackPush ( Stack * ptr_data, Stack_Elem_Data_t value );
 
-int StackBurger ( Stack * ptr_data );
+int StackDump ( Stack * ptr_data );
 
-int StackBalls ( Stack * ptr_stk );
+int StackCheck ( Stack * ptr_stk );
 
 int StackPop ( Stack * ptr_data );
 
