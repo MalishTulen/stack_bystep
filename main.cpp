@@ -28,5 +28,7 @@ fprintf(stderr, "dex %d \n", pidor );
 
         rand[pidor] = pidor;
     }
+
+    *(ptr_stk->data_ptr - 1 ) = 666;
     StackDtor ( ptr_stk );
 }

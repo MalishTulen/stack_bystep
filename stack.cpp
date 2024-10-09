@@ -3,38 +3,23 @@
 #include <assert.h>
 
 #include "stack.h"
-
-unsigned long one_hash ( const Stack_Elem_Data_t * element )
+unsigned long one_hash ( Stack * ptr_stk )
 {
     unsigned long hash_coefficient = 5381;
-    unsigned long hash_result      = 0;
+    unsigned long hash_result      =    0;
 
-    for (; *element; element++) {
-        hash_result = (hash_coefficient << 5) + hash_coefficient + *element;
+    for ( int i = 0; i < ptr_stk->capacity; i++) {
+        hash_result += (hash_coefficient << 5) + hash_coefficient + *( ptr_stk->data_ptr + i );
     }
 
     return hash_result;
 }
 
-int give_me_that_hash ( Stack* ptr_stk )
-{
-    ptr_stk->hehesh = 0;
-    for (int stack_element = 0; stack_element < ptr_stk->capacity; stack_element++)
-    {
-        ptr_stk->hehesh += one_hash ( ( const Stack_Elem_Data_t* ) ( (char* )ptr_stk->data_ptr + stack_element * sizeof ( Stack_Elem_Data_t ) ) );
-    }
-
-    return 0;
-}
-
 bool hash_check ( Stack* ptr_stk )
 {
     unsigned long check_hash_sum = 0;
-    for (int stack_element = 0; stack_element < ptr_stk->size; stack_element++)
-    {
-        check_hash_sum += one_hash ( ( const Stack_Elem_Data_t* ) ( (char* )ptr_stk->data_ptr + stack_element * sizeof ( Stack_Elem_Data_t ) ) );
-    }
-    printf ( "+hash = %lu\n", check_hash_sum );
+
+    check_hash_sum = one_hash ( ptr_stk );
 
     if ( ptr_stk->hehesh == check_hash_sum )
     {
@@ -52,7 +37,7 @@ int StackCtor ( Stack * ptr_stk, int capacity )
     {
         return -1;
     }
-    ptr_stk->size = 0;
+    ptr_stk->size     =        0;
     ptr_stk->capacity = capacity;
     give_equalazer ( ptr_stk, capacity );
 
@@ -61,7 +46,7 @@ int StackCtor ( Stack * ptr_stk, int capacity )
 
     ptr_stk->data_ptr = ( Stack_Elem_Data_t* ) ( ( char* ) tmp_ptr + sizeof ( canary_t ) );
 
-    ptr_stk->hehesh = give_me_that_hash ( ptr_stk );
+    ptr_stk->hehesh = one_hash ( ptr_stk );
 
     *( tmp_ptr ) = PETUSHOK1;
 
@@ -79,12 +64,12 @@ int StackDump ( Stack * ptr_stk )
 {
     STACK_ASSERT( ptr_stk );
 
-    printf ( "\nsize=%d\n", ptr_stk->size );
-    printf ( "capacity=%d\n", ptr_stk->capacity );
-    printf ( "hash=%lu\n", ptr_stk->hehesh );
-    printf ( "equalazer=%d\n", ptr_stk->equalazer );
+    printf ( "\nsize=%d\n"   ,   ptr_stk->size );
+    printf ( "capacity=%d\n" ,   ptr_stk->capacity );
+    printf ( "hash=%lu\n"    ,   ptr_stk->hehesh );
+    printf ( "equalazer=%d\n",   ptr_stk->equalazer );
 
-    printf ( "PETUH1: %d\n", *( Stack_Elem_Data_t* ) ( ( char* ) ptr_stk->data_ptr - sizeof ( canary_t ) ) );
+    printf ( "PETUH1: %d\n"  ,   *( Stack_Elem_Data_t* ) ( ( char* ) ptr_stk->data_ptr - sizeof ( canary_t ) ) );
     printf ( "Stack:[ " );
     for ( int i = 0 ; i < ( ptr_stk->capacity ); i++ )
     {
@@ -92,7 +77,7 @@ int StackDump ( Stack * ptr_stk )
     }
     printf ( "]\n" );
 
-    printf ( "PETUH2: %d\n", *( Stack_Elem_Data_t* ) ( ( char* ) ( ptr_stk->data_ptr + ptr_stk->capacity ) + ptr_stk->equalazer ) );
+    printf ( "PETUH2: %d\n"  ,   *( Stack_Elem_Data_t* ) ( ( char* ) ( ptr_stk->data_ptr + ptr_stk->capacity ) + ptr_stk->equalazer ) );
 
     STACK_ASSERT( ptr_stk );
 
@@ -130,7 +115,7 @@ int StackCheck ( Stack * ptr_stk )
         return PETUSHOK2_ERROR;
     }
 
-    if ( hash_check ( ptr_stk ) == false )
+    if ( hash_check ( ptr_stk ) == true )
     {
         return ( BAD_HASH );
     }
@@ -155,7 +140,7 @@ int StackPop ( Stack * ptr_stk )
         int ruka = *( ptr_stk->data_ptr + ptr_stk->size - 1 );
         printf ("%d", ruka );
 
-        ptr_stk->hehesh = give_me_that_hash ( ptr_stk );
+        ptr_stk->hehesh = one_hash ( ptr_stk );
 
         *( ptr_stk->data_ptr + ptr_stk->size - 1 ) = 0;
         (ptr_stk->size)--;
@@ -177,7 +162,7 @@ int StackPush ( Stack * ptr_stk, Stack_Elem_Data_t value )
     }
     ptr_stk->data_ptr[ ptr_stk->size ] = value;
     (ptr_stk->size)++;
-    ptr_stk->hehesh = give_me_that_hash ( ptr_stk );
+    ptr_stk->hehesh = one_hash ( ptr_stk );
 
     STACK_ASSERT( ptr_stk );
 
@@ -222,6 +207,8 @@ int StackDtor ( Stack* ptr_stk )
 
     ptr_stk->size = 0;
     ptr_stk->capacity = 0;
+    ptr_stk->equalazer = 0;
+    ptr_stk->hehesh = 0;
     free ( ptr_stk->data_ptr );
 
     return FUNC_DONE;

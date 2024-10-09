@@ -1,6 +1,10 @@
 #ifndef STACK_HEADER
 #define STACK_HEADER
 
+
+//#ifdef DEBUG
+
+
 #define STACK_ASSERT( ptr_stk  )      ({                                                                            \
                                                                                                                     \
 int c;                                                                                                              \
@@ -60,20 +64,20 @@ if ( ( c = StackCheck ( ptr_stk )) != FUNC_DONE )                               
 
 enum ERROR_CODES
 {
-    ERROR_SIZE = 0,
-    ERROR_CAPACITY = 1,
-    ERROR_DATA_PTR = 2,
-    ERROR_S_LARGER_C = 3,
-    ERROR_ZERO_SIZE = 666,
-    BAD_HASH = 1234,
+    ERROR_SIZE       =    0,
+    ERROR_CAPACITY   =    1,
+    ERROR_DATA_PTR   =    2,
+    ERROR_S_LARGER_C =    3,
+    ERROR_ZERO_SIZE  =  666,
+    BAD_HASH         = 1234,
 };
 
 enum PETUSHKI
 {
-    PETUSHOK1 = 12345678,
-    PETUSHOK2 = 12345678,
-    PETUSHOK1_ERROR = 666,
-    PETUSHOK2_ERROR = 667
+    PETUSHOK1       = 12345678,
+    PETUSHOK2       = 12345678,
+    PETUSHOK1_ERROR =      666,
+    PETUSHOK2_ERROR =      667
 };
 
 enum FUNC_CHECK
@@ -86,24 +90,23 @@ typedef long long canary_t;
 
 struct Stack
 {
-    Stack_Elem_Data_t * data_ptr;            // *((char *) data - sizeof(canary_t)) = 0xFEE1DEAD
-    int size;
-    int capacity;
-    int equalazer;
-    unsigned long hehesh;
+    Stack_Elem_Data_t*     data_ptr;            // *((char *) data - sizeof(canary_t)) = 0xFEE1DEAD
+    int                    size;
+    int                    capacity;
+    int                    equalazer;
+    unsigned long          hehesh;
 };
 
-unsigned long one_hash          ( const Stack_Elem_Data_t * element );
-int           give_me_that_hash ( Stack* ptr_stk );
+unsigned long one_hash          ( Stack* ptr_stk );
 bool          hash_check        ( Stack* ptr_stk );
-int           StackPush         ( Stack * ptr_data, Stack_Elem_Data_t value );
-int           StackCtor         ( Stack * ptr_data, int new_capacity );
-int           StackDump         ( Stack * ptr_data );
-int           StackCheck        ( Stack * ptr_stk );
-int           StackPop          ( Stack * ptr_data );
+int           StackPush         ( Stack* ptr_data, Stack_Elem_Data_t value );
+int           StackCtor         ( Stack* ptr_data, int new_capacity );
+int           StackDump         ( Stack* ptr_data );
+int           StackCheck        ( Stack* ptr_stk );
+int           StackPop          ( Stack* ptr_data );
 int           recalloc          ( Stack* ptr_stk, int new_capacity );
 int           cleaner_realloc   ( Stack* ptr_stk );
 int           StackDtor         ( Stack* ptr_stk );
-int           give_equalazer    ( Stack * ptr_stk, int capacity );
+int           give_equalazer    ( Stack* ptr_stk, int capacity );
 
 #endif
