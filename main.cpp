@@ -5,6 +5,7 @@
 const int GOVNO = 0;
 
 #include "stack.h"
+
 //2 modes: debug and release
 int main()
 {

@@ -2,34 +2,46 @@
 #include <malloc.h>
 #include <assert.h>
 
+
+#define DEBUG
+#define CANARY_PROTECT
+#define HASH_PROTECT
+
 #include "stack.h"
-unsigned long one_hash ( Stack * ptr_stk )
-{
-    unsigned long hash_coefficient = 5381;
-    unsigned long hash_result      =    0;
 
-    for ( int i = 0; i < ptr_stk->capacity; i++) {
-        hash_result += (hash_coefficient << 5) + hash_coefficient + *( ptr_stk->data_ptr + i );
-    }
-
-    return hash_result;
-}
-
-bool hash_check ( Stack* ptr_stk )
-{
-    unsigned long check_hash_sum = 0;
-
-    check_hash_sum = one_hash ( ptr_stk );
-
-    if ( ptr_stk->hehesh == check_hash_sum )
+#ifdef DEBUG
+#ifdef HASH_PROTECT
+    bool hash_check ( Stack* ptr_stk )
     {
-        return false;
+        unsigned long check_hash_sum = 0;
+
+        check_hash_sum = one_hash ( ptr_stk );
+
+        if ( ptr_stk->hehesh == check_hash_sum )
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
-    else
+
+    unsigned long one_hash ( Stack * ptr_stk )
     {
-        return true;
+        unsigned long hash_coefficient = 5381;
+        unsigned long hash_result      =    0;
+
+        for ( int i = 0; i < ptr_stk->capacity; i++)
+        {
+            hash_result += (hash_coefficient << 5) + hash_coefficient + *( ptr_stk->data_ptr + i );
+        }
+
+        return hash_result;
     }
-}
+#endif
+#endif
+
 
 int StackCtor ( Stack * ptr_stk, int capacity )
 {
@@ -46,11 +58,10 @@ int StackCtor ( Stack * ptr_stk, int capacity )
 
     ptr_stk->data_ptr = ( Stack_Elem_Data_t* ) ( ( char* ) tmp_ptr + sizeof ( canary_t ) );
 
-    ptr_stk->hehesh = one_hash ( ptr_stk );
+    ptr_stk->hehesh = GIVE_ME_HASH ( ptr_stk );
 
-    *( tmp_ptr ) = PETUSHOK1;
+    CANARY_INIT ( ptr_stk );
 
-    *( Stack_Elem_Data_t* ) ( ( char* ) ptr_stk->data_ptr + capacity * sizeof ( Stack_Elem_Data_t )  + ptr_stk->equalazer ) = PETUSHOK2;
     StackDump ( ptr_stk );
     getchar();
 
@@ -69,7 +80,6 @@ int StackDump ( Stack * ptr_stk )
     printf ( "hash=%lu\n"    ,   ptr_stk->hehesh );
     printf ( "equalazer=%d\n",   ptr_stk->equalazer );
 
-    printf ( "PETUH1: %d\n"  ,   *( Stack_Elem_Data_t* ) ( ( char* ) ptr_stk->data_ptr - sizeof ( canary_t ) ) );
     printf ( "Stack:[ " );
     for ( int i = 0 ; i < ( ptr_stk->capacity ); i++ )
     {
@@ -77,8 +87,7 @@ int StackDump ( Stack * ptr_stk )
     }
     printf ( "]\n" );
 
-    printf ( "PETUH2: %d\n"  ,   *( Stack_Elem_Data_t* ) ( ( char* ) ( ptr_stk->data_ptr + ptr_stk->capacity ) + ptr_stk->equalazer ) );
-
+    PETUHRINT ( ptr_stk );
     STACK_ASSERT( ptr_stk );
 
     return FUNC_DONE;
@@ -103,19 +112,9 @@ int StackCheck ( Stack * ptr_stk )
     {
         return ( ERROR_S_LARGER_C );
     }
-    if ( *( ( Stack_Elem_Data_t* ) ( ( char* ) ( ptr_stk->data_ptr ) - sizeof ( canary_t ) ) ) != PETUSHOK1 )
-    {
-        printf ( "**\n%d\n***", ( *( ( Stack_Elem_Data_t* ) ( char* ) (ptr_stk->data_ptr ) - sizeof ( canary_t ) ) ) );
-        return PETUSHOK1_ERROR;
-    }
+    PETUHCHECK ( ptr_stk );
 
-    if ( *( ( Stack_Elem_Data_t* ) (  ( char* ) ( ptr_stk->data_ptr + ptr_stk->capacity ) + ptr_stk->equalazer ) ) != PETUSHOK2 )
-    {
-        printf ( "**\n%d\n***", *( ( Stack_Elem_Data_t* ) (  ( char* ) ( ptr_stk->data_ptr + ptr_stk->capacity ) + ptr_stk->equalazer ) ) );
-        return PETUSHOK2_ERROR;
-    }
-
-    if ( hash_check ( ptr_stk ) == true )
+    if ( ZABULLIL_HASH ( ptr_stk ) == true )
     {
         return ( BAD_HASH );
     }
@@ -140,7 +139,7 @@ int StackPop ( Stack * ptr_stk )
         int ruka = *( ptr_stk->data_ptr + ptr_stk->size - 1 );
         printf ("%d", ruka );
 
-        ptr_stk->hehesh = one_hash ( ptr_stk );
+        ptr_stk->hehesh = GIVE_ME_HASH ( ptr_stk );
 
         *( ptr_stk->data_ptr + ptr_stk->size - 1 ) = 0;
         (ptr_stk->size)--;
@@ -162,7 +161,7 @@ int StackPush ( Stack * ptr_stk, Stack_Elem_Data_t value )
     }
     ptr_stk->data_ptr[ ptr_stk->size ] = value;
     (ptr_stk->size)++;
-    ptr_stk->hehesh = one_hash ( ptr_stk );
+    ptr_stk->hehesh = GIVE_ME_HASH ( ptr_stk );
 
     STACK_ASSERT( ptr_stk );
 
@@ -179,8 +178,7 @@ int recalloc ( Stack* ptr_stk, int new_capacity )
     if (ptr_stk->capacity < new_capacity )
         cleaner_realloc ( ptr_stk );
 
-    *( Stack_Elem_Data_t* ) ( ( char* ) ptr_stk->data_ptr - sizeof ( canary_t ) ) = PETUSHOK1;
-    *( Stack_Elem_Data_t* ) ( ( char* ) ptr_stk->data_ptr + new_capacity * sizeof ( Stack_Elem_Data_t )  + ptr_stk->equalazer ) = PETUSHOK2;
+    POPA_PETUHA ( ptr_stk );
 
     STACK_ASSERT( ptr_stk );
 
@@ -208,7 +206,7 @@ int StackDtor ( Stack* ptr_stk )
     ptr_stk->size = 0;
     ptr_stk->capacity = 0;
     ptr_stk->equalazer = 0;
-    ptr_stk->hehesh = 0;
+    FREE_HASH ( ptr_stk );
     free ( ptr_stk->data_ptr );
 
     return FUNC_DONE;
